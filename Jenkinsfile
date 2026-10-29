@@ -1,16 +1,34 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
-        stage('Install dependencies') {
+        stage('Checkout from GitHub') {
             steps {
-                sh 'pip install -r requirements.txt'
+                checkout scm
             }
         }
 
-        stage('Run tests') {
+        stage('Run Python application') {
             steps {
-                sh 'pytest -q'
+                bat 'python --version'
+                bat 'python hello.py'
+            }
+        }
+
+        stage('Install dependencies and test') {
+            steps {
+                bat 'python -m pip install -r requirements.txt'
+                bat 'python -m pytest -v'
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                bat 'docker build -t mlops-hello .'
             }
         }
     }
