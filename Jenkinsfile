@@ -31,5 +31,12 @@ pipeline {
                 bat 'docker build -t mlops-hello .'
             }
         }
+        stage('Evidently monitoring') {
+            steps {
+                bat 'python monitor.py'
+                    archiveArtifacts artifacts: 'drift_report.html',
+                         fingerprint: true
+    }
+}
     }
 }
