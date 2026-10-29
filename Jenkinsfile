@@ -12,17 +12,18 @@ pipeline {
             }
         }
 
-        stage('Run Python application') {
+        stage('Install dependencies and test') {
             steps {
                 bat 'python --version'
-                bat 'python hello.py'
+                bat 'python -m pip install --upgrade -r requirements.txt'
+                bat 'python -m pip check'
+                bat 'python -m pytest -v'
             }
         }
 
-        stage('Install dependencies and test') {
+        stage('Run Python application') {
             steps {
-                bat 'python -m pip install -r requirements.txt'
-                bat 'python -m pytest -v'
+                bat 'python hello.py'
             }
         }
 
